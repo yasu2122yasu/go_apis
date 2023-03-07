@@ -10,71 +10,21 @@ import (
 )
 
 func main() {
-    cards := "Q5 H12 H10 H11 H1"
-    test := makeIntSlice(cards)
+    cards := "Q11 H10 H10 H11 H1"
+    num := makeIntSlice(cards)
     test2 := makeStringSlice(cards)
 
-    flush := 0
+		flush := judgeFlush(cards, test2)
 
-    if strings.Count(cards, test2[0]) == len(test2) {
-      flush = 1
-    } else {
-      flush = 0
-    }
+		straight := judgeStraight(num)
 
-    sort.Ints(test)
+    tbt := findDup(num)
 
-    straight := 0
+		j := sliceToArray(tbt)
 
-    if (test[1] == test[0] +1 && test[2] == test[0] + 2 && test[3] == test[0] +3 && test[4] == test[0] + 4 ||  test[0] == 1 && test[1] == 1){
-        straight = 1
-    } else {
-        straight = 0
-    }
+		a := judge(j , num, straight, flush)
 
-    tbt := findDup(test)
-
-    sort.Ints(tbt)
-
-		j := []int{}
-
-		for _,i := range tbt {
-			if i != 0 {
-			  j = append(j, i)
-	   	}
-		}
-
-		//二次元スライスを作成する。2ペアなどの判定で利用。
-
-		p := [][]int{{1, 4}, {2, 3}, {1, 1, 3 }, {1, 2, 2}, {1, 1, 1, 2}, {1, 1, 1, 1, 1}}
-
-		if reflect.DeepEqual(j, p[0]){
-			fmt.Println("4カードです")
-		} else if reflect.DeepEqual(j, p[1]){
-			fmt.Println("フルハウスです")
-		} else if reflect.DeepEqual(j, p[2]){
-			fmt.Println("スリーカードです")
-		} else if reflect.DeepEqual(j, p[3]){
-			fmt.Println("ツーペアです")
-		} else if reflect.DeepEqual(j, p[4]){
-			fmt.Println("ワンペアです")
-		} else if reflect.DeepEqual(j, p[5]){
-			// 比較をするにはスライスを配列に変換する必要がある。testスライスをs配列に変更する。
-			s := [5]int{}
-			copy(s[:], test)
-
-			if (s == [5]int{1,10,11,12,13} && flush == 1) {
-				fmt.Println("ロイヤルストレート")
-			} else if (s != [5]int{1,10,11,12,13} && flush == 1 && straight == 1) {
-        fmt.Println("ストレートフラッシュ")
-		  } else if (flush == 1){
-				fmt.Println("フラッシュ")
-			} else if (straight == 1){
-				fmt.Println("ストレート")
-			} else {
-				fmt.Println("ノーペア")
-			}
-		}
+		fmt.Println(a)
 
 }
 
@@ -89,6 +39,8 @@ func makeIntSlice(cards string) []int{
         ab = append(ab, j)
     }
 
+		sort.Ints(ab)
+
     return ab
 }
 
@@ -98,6 +50,29 @@ func makeStringSlice(cards string) []string{
     return snum
 }
 
+func judgeFlush(cards string, test2 []string) int {
+	  flush := 0
+
+    if strings.Count(cards, test2[0]) == len(test2) {
+      flush = 1
+    } else {
+      flush = 0
+    }
+
+		return flush
+
+	}
+
+func	judgeStraight(num []int) int {
+	straight := 0
+
+	if (num[1] == num[0] +1 && num[2] == num[0] + 2 && num[3] == num[0] +3 && num[4] == num[0] + 4 ||  num[0] == 1 && num[1] == 1){
+			straight = 1
+	} else {
+			straight = 0
+	}
+	return straight
+}
 
 
 
@@ -117,9 +92,54 @@ func findDup(array []int) []int {
 	for i := 0; i < len(array); i++ {
 		dup[array[i]] += 1
 	}
+
+	sort.Ints(dup)
 	return dup
 }
 
-// func judge(j int, test []int, straight, flush int) string {
+func sliceToArray(tbt []int)[]int {
+	j := []int{}
 
-// }
+	for _,i := range tbt {
+		if i != 0 {
+			j = append(j, i)
+		 }
+	}
+	return j
+}
+
+func judge(j []int, num []int, straight, flush int) string {
+	//二次元スライスを作成する。2ペアなどの判定で利用。
+
+	p := [][]int{{1, 4}, {2, 3}, {1, 1, 3 }, {1, 2, 2}, {1, 1, 1, 2}, {1, 1, 1, 1, 1}}
+	var a string = ""
+
+	if reflect.DeepEqual(j, p[0]){
+		a = "4カード"
+	} else if reflect.DeepEqual(j, p[1]){
+		a = "フルハウス"
+	} else if reflect.DeepEqual(j, p[2]){
+		a = "スリーカード"
+	} else if reflect.DeepEqual(j, p[3]){
+		a = "ツーペア"
+	} else if reflect.DeepEqual(j, p[4]){
+		a = "ワンペア"
+	} else if reflect.DeepEqual(j, p[5]){
+		// 比較をするにはスライスを配列に変換する必要がある。testスライスをs配列に変更する。
+		s := [5]int{}
+		copy(s[:], num)
+
+		if (s == [5]int{1,10,11,12,13} && flush == 1) {
+			a = "ロイヤルストレートフラッシュ"
+		} else if (s != [5]int{1,10,11,12,13} && flush == 1 && straight == 1) {
+			a = "ストレートフラッシュ"
+		} else if (flush == 1){
+			a = "フラッシュ"
+		} else if (straight == 1){
+			a = "ストレート"
+		} else {
+			a = "ノーペア"
+		}
+	}
+	return a
+}
