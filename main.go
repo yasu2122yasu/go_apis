@@ -42,6 +42,8 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 		// a := judge(j , num, straight, flush)
 
+		// Git remote接続テストの変更
+
 		fmt.Printf("%T\n", cards)
 
 		json.NewEncoder(w).Encode(cards)
