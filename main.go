@@ -18,35 +18,32 @@ type Poker struct {
     Title  string  `json:"title"`
 }
 
-func process(w http.ResponseWriter, r *http.Request) {
+var pokers []Poker
+
+func process(w http.ResponseWriter, r *http.Request)  {
     w.Header().Set("Content-Type", "application/json")
 
-    var poker Poker
+		var poker Poker
 
-		json.NewDecoder(r.Body).Decode(&poker)
+		fmt.Printf("%T\n", poker)
+		fmt.Printf("%T\n", poker.Title)
 
-		var cards string = poker.Title
+		_ = json.NewDecoder(r.Body).Decode(&poker)
 
-		// fmt.Printf("%T\n", cards)
+		num := makeIntSlice(poker.Title)
+    test2 := makeStringSlice(poker.Title)
 
-		// num := makeIntSlice(cards)
-    // test2 := makeStringSlice(cards)
+		flush := judgeFlush(poker.Title, test2)
 
-		// flush := judgeFlush(cards, test2)
+		straight := judgeStraight(num)
 
-		// straight := judgeStraight(num)
+    dup := findDup(num)
 
-    // dup := findDup(num)
+		j := sliceToArray(dup)
 
-		// j := sliceToArray(dup)
+		a := judge(j , num, straight, flush)
 
-		// a := judge(j , num, straight, flush)
-
-		// Git remote接続テストの変更
-
-		fmt.Printf("%T\n", cards)
-
-		json.NewEncoder(w).Encode(cards)
+		json.NewEncoder(w).Encode(a)
 }
 
 func main() {
