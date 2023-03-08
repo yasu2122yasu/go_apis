@@ -1,61 +1,40 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
 	"reflect"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
-type Poker struct {
-    Title  string  `json:"title"`
-}
 
-func process(w http.ResponseWriter, r *http.Request) {
-    w.Header().Set("Content-Type", "application/json")
 
-    var poker Poker
+func main() {
 
-		json.NewDecoder(r.Body).Decode(&poker)
-
-		var cards string = poker.Title
+		var cards string = "H2 H1 Q3 D3 D9"
 
 		fmt.Printf("%T\n", cards)
 
-		// num := makeIntSlice(cards)
-    // test2 := makeStringSlice(cards)
+		num := makeIntSlice(cards)
+    test2 := makeStringSlice(cards)
 
-		// flush := judgeFlush(cards, test2)
+		flush := judgeFlush(cards, test2)
 
-		// straight := judgeStraight(num)
+		straight := judgeStraight(num)
 
-    // dup := findDup(num)
+    dup := findDup(num)
 
-		// j := sliceToArray(dup)
+		j := sliceToArray(dup)
 
-		// a := judge(j , num, straight, flush)
+		a := judge(j , num, straight, flush)
 
-		// fmt.Printf("%T\n", a)
+		fmt.Printf("%T\n", a)
 
-		// json.NewEncoder(w).Encode(a)
 
-		// fmt.Printf("%T\n", a)
-}
 
-func main() {
-    // Initiate Router
-    r := mux.NewRouter()
-
-    r.HandleFunc("/", process).Methods("POST")
-
-    log.Fatal(http.ListenAndServe(":8000", r))
+		fmt.Printf("%T\n", a)
 }
 
 func makeIntSlice(cards string) []int{
