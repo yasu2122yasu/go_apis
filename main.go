@@ -27,7 +27,7 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 		var cards string = poker.Title
 
-		fmt.Printf("%T\n", cards)
+		// fmt.Printf("%T\n", cards)
 
 		// num := makeIntSlice(cards)
     // test2 := makeStringSlice(cards)
@@ -42,11 +42,11 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 		// a := judge(j , num, straight, flush)
 
-		// fmt.Printf("%T\n", a)
+		// Git remote接続テストの変更
 
-		// json.NewEncoder(w).Encode(a)
+		fmt.Printf("%T\n", cards)
 
-		// fmt.Printf("%T\n", a)
+		json.NewEncoder(w).Encode(cards)
 }
 
 func main() {
