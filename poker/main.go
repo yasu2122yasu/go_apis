@@ -1,26 +1,38 @@
 package main
 
 import (
-	"fmt"
+	"encoding/json"
+	"log"
+	"net/http"
 	"reflect"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/gorilla/mux"
 )
 
+type Poker struct {
+    Title  string  `json:"title"`
+}
 
+var pokers []Poker
 
-func main() {
+func process(w http.ResponseWriter, r *http.Request)  {
+    w.Header().Set("Content-Type", "application/json")
 
-		var cards string = "H2 H1 Q3 D3 D9"
+		var poker Poker
 
-		fmt.Printf("%T\n", cards)
+		_ = json.NewDecoder(r.Body).Decode(&poker)
 
-		num := makeIntSlice(cards)
-    test2 := makeStringSlice(cards)
+		p := poker.Title
 
-		flush := judgeFlush(cards, test2)
+		num := makeIntSlice(p)
+
+    test2 := makeStringSlice(p)
+
+		flush := judgeFlush(p, test2)
 
 		straight := judgeStraight(num)
 
@@ -30,16 +42,22 @@ func main() {
 
 		a := judge(j , num, straight, flush)
 
-		fmt.Printf("%T\n", a)
+		json.NewEncoder(w).Encode(a)
+}
 
+func main() {
+    // Initiate Router
+    r := mux.NewRouter()
 
+    r.HandleFunc("/", process).Methods("POST")
 
-		fmt.Printf("%T\n", a)
+    log.Fatal(http.ListenAndServe(":8000", r))
 }
 
 func makeIntSlice(cards string) []int{
-    regex, _ := regexp.Compile("[^0-9| ]")
-    stest := strings.Split(regex.ReplaceAllString(cards, ""), " ")
+    r, _ := regexp.Compile("[^0-9| ]")
+
+    stest := strings.Split(r.ReplaceAllString(cards, ""), " ")
 
     var ab = []int{}
 
@@ -54,8 +72,10 @@ func makeIntSlice(cards string) []int{
 }
 
 func makeStringSlice(cards string) []string{
-    regex, _ := regexp.Compile("[^A-Z| ]")
-    snum := strings.Split(regex.ReplaceAllString(cards, ""), " ")
+    r, _ := regexp.Compile("[^A-Z| ]")
+
+    snum := strings.Split(r.ReplaceAllString(cards, ""), " ")
+
     return snum
 }
 
@@ -82,8 +102,6 @@ func	judgeStraight(num []int) int {
 	}
 	return straight
 }
-
-
 
 func findGreat(array []int) int {
 	greatest := 0
