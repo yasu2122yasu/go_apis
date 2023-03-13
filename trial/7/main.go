@@ -11,11 +11,11 @@ func main() {
 
 	switch a {
 	case "ぶどう":
-		fmt.Printf("%s\n", a)
+		fmt.Printf("好きな果物はです%s\n", a)
 	case "りんご":
-		fmt.Printf("%s\n", a)
+		fmt.Printf("好きな果物はです%s\n", a)
 	case "みかん":
-		fmt.Printf("%s\n", a)
+		fmt.Printf("好きな果物はです%s\n", a)
 	default:
 		fmt.Println("好きな食べ物はありません")
 	}

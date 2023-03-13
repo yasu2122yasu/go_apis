@@ -1,11 +1,24 @@
-// おはようと10回出力するプログラムを書いてください。
 package main
 
 import "fmt"
 
 func main() {
-	var i int
-	for i = 0; i < 10; i++ {
-		fmt.Printf("%s\n", "おはよう")
+	b := fruitSelect()
+	fmt.Printf("好きな果物は%sです\n", b)
+}
+
+func fruitSelect() string {
+	a := "みかん"
+
+	switch a {
+	case "ぶどう":
+		a = "ぶどう"
+	case "りんご":
+		a = "りんご"
+	case "みかん":
+		a = "みかん"
+	default:
+		fmt.Println("好きな食べ物はありません")
 	}
+	return a
 }
