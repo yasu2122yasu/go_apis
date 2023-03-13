@@ -31,9 +31,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	num := makeIntSlice(p)
 
-	test2 := makeStringSlice(p)
+	u := makeStringSlice(p)
 
-	flush := judgeFlush(p, test2)
+	flush := judgeFlush(p, u)
 
 	straight := judgeStraight(num)
 
@@ -99,9 +99,9 @@ func makeStringSlice(cards string) []string {
 		panic("配布されたカードの数が5枚ではありません")
 	}
 
-	// p := removeImproperNumberOfSheets(s)
+	var u []string = suitValidation(p)
 
-	return p
+	return u
 }
 
 func judgeFlush(cards string, test2 []string) int {
@@ -196,14 +196,22 @@ func judge(j []int, num []int, straight, flush int) string {
 	return a
 }
 
-// 文字列型、数値型のスライス共通で、4枚以下・6枚以上の異常系を取り除く関数。スライス→関数→スライスにする必要がある。
-// func removeImproperNumberOfSheets(a []string) [5]string {
-// 	b := [5]string{}
-// 	copy(b[:], a)
-// 	fmt.Printf("b1%T\n", b)
-// 	if cap(b) != 5 {
-// 		panic("与えられたカードの枚数が5枚ではない。")
-// 	}
-
-// 	return b
-// }
+func suitValidation(y []string) []string {
+	// 排除したい文字がなければ正しいパラメータを表示するだけ
+	for _, n := range y {
+		switch n {
+		case "Q":
+			fmt.Printf("%s\n", n)
+		case "D":
+			fmt.Printf("%s\n", n)
+		case "S":
+			fmt.Printf("%s\n", n)
+		case "H":
+			fmt.Printf("%s\n", n)
+			//異常系ならpanic()で止める
+		default:
+			panic("柄が異なります")
+		}
+	}
+	return y
+}
