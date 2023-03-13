@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"reflect"
@@ -64,16 +63,11 @@ func makeIntSlice(cards string) []int {
 	copy(s[:], q)
 
 	if len(s) == 5 {
-		fmt.Printf("ok %T\n", s)
+		// 正常系
 	} else {
-		fmt.Printf("bad %T\n", s)
+		// 配布されたコードが5枚でなければ処理を止める
 		panic("配布されたカードの数が5枚ではありません")
 	}
-
-	fmt.Printf("テスト%s\n", s)
-
-	fmt.Printf("%T\n", s)
-	fmt.Println(cap(s))
 
 	var ab = []int{}
 
@@ -93,9 +87,9 @@ func makeStringSlice(cards string) []string {
 	p := strings.Split(r.ReplaceAllString(cards, ""), " ")
 
 	if len(p) == 5 {
-		fmt.Printf("ok %T\n", p)
+		// 正常系
 	} else {
-		fmt.Printf("bad %T\n", p)
+		// 配布されたコードが5枚でなければ処理を止める
 		panic("配布されたカードの数が5枚ではありません")
 	}
 
@@ -201,14 +195,13 @@ func suitValidation(y []string) []string {
 	for _, n := range y {
 		switch n {
 		case "Q":
-			fmt.Printf("%s\n", n)
+			// 正常系
 		case "D":
-			fmt.Printf("%s\n", n)
+			// 正常系
 		case "S":
-			fmt.Printf("%s\n", n)
+			// 正常系
 		case "H":
-			fmt.Printf("%s\n", n)
-			//異常系ならpanic()で止める
+			// 正常系
 		default:
 			panic("柄が異なります")
 		}
