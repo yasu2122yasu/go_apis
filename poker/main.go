@@ -14,6 +14,8 @@ import (
 	"github.com/gorilla/mux"
 )
 
+//ここから本実装
+
 type Poker struct {
 	Title string `json:"title"`
 }
@@ -29,9 +31,11 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	p := poker.Title
 
-	num := makeIntSlice(p)
+	var err int
 
-	u := makeStringSlice(p)
+	num, err := makeIntSlice(p, err)
+
+	u, err := makeStringSlice(p, err)
 
 	flush := judgeFlush(p, u)
 
@@ -43,10 +47,15 @@ func process(w http.ResponseWriter, r *http.Request) {
 
 	a := judge(j, num, straight, flush)
 
-	json.NewEncoder(w).Encode(a)
+	if err == 400 {
+		a = "400(Bad Request)"
+	} else {
+		//処理なし
+	}
 
-	err := Unauthorized.New("ある認証の処理内で返されたエラー")
-	fmt.Println(statusCode(err)) // 401
+	fmt.Printf("%s\n", a)
+
+	json.NewEncoder(w).Encode(a)
 }
 
 func main() {
@@ -58,7 +67,9 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
 
-func makeIntSlice(cards string) []int {
+// 文字列から数字のみを抜き出して数値型のスライスに変換するコード
+func makeIntSlice(cards string, err int) ([]int, int) {
+
 	r, _ := regexp.Compile("[^0-9| ]")
 
 	q := strings.Split(r.ReplaceAllString(cards, ""), " ")
@@ -66,41 +77,48 @@ func makeIntSlice(cards string) []int {
 	s := [5]string{}
 	copy(s[:], q)
 
-	if len(s) == 5 {
-		// 正常系
-	} else {
-		// 配布されたコードが5枚でなければ処理を止める
-
-	}
-
 	var ab = []int{}
 
 	for _, i := range q {
 		j, _ := strconv.Atoi(i)
+		if j > 13 {
+			err = 400
+		}
 		ab = append(ab, j)
 	}
 
 	sort.Ints(ab)
 
-	return ab
+	if cap(ab) == 5 {
+		// 正常系
+	} else {
+		err = 400
+		return ab, err
+	}
+
+	fmt.Printf("%d\n", err)
+
+	return ab, err
 }
 
-func makeStringSlice(cards string) []string {
+// 文字列から文字のみを抜き出して文字列型のスライスに変換するコード
+func makeStringSlice(cards string, err int) ([]string, int) {
 	r, _ := regexp.Compile("[^A-Z| ]")
 
 	p := strings.Split(r.ReplaceAllString(cards, ""), " ")
 
+	var u []string
+
+	u, err = suitValidation(p, err)
+
 	if len(p) == 5 {
 		// 正常系
 	} else {
-		// 配布されたコードが5枚でなければ処理を止めて、400エラーを出す
-		err := Unauthorized.New("入力値が異なります")
-		fmt.Println(statusCode(err))
+		err = 400
+		return u, err
 	}
 
-	var u []string = suitValidation(p)
-
-	return u
+	return u, err
 }
 
 func judgeFlush(cards string, test2 []string) int {
@@ -195,7 +213,7 @@ func judge(j []int, num []int, straight, flush int) string {
 	return a
 }
 
-func suitValidation(y []string) []string {
+func suitValidation(y []string, err int) ([]string, int) {
 	// 排除したい文字がなければ正しいパラメータを表示するだけ
 	for _, n := range y {
 		switch n {
@@ -208,20 +226,9 @@ func suitValidation(y []string) []string {
 		case "H":
 			// 正常系
 		default:
-			panic("柄が異なります")
+			err = 400
+			return y, err
 		}
 	}
-	return y
-}
-
-// エラー処理
-func statusCode(err error) int {
-	switch GetType(err) {
-	case ConnectionFailed:
-		return http.StatusInternalServerError // 500
-	case Unauthorized:
-		return http.StatusUnauthorized // 401
-	default:
-		return http.StatusBadRequest // 400
-	}
+	return y, err
 }
