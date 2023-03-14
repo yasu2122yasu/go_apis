@@ -12,5 +12,5 @@ func main() {
 	var num2 int
 	num2, _ = strconv.Atoi(num1)
 	fmt.Println(num2)
-	fmt.Printf("%T,%T", num1, num2)
+	fmt.Printf("%T,	%T", num1, num2)
 }

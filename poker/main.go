@@ -44,6 +44,9 @@ func process(w http.ResponseWriter, r *http.Request) {
 	a := judge(j, num, straight, flush)
 
 	json.NewEncoder(w).Encode(a)
+
+	err := Unauthorized.New("ある認証の処理内で返されたエラー")
+	fmt.Println(statusCode(err)) // 401
 }
 
 func main() {
@@ -213,5 +216,12 @@ func suitValidation(y []string) []string {
 
 // エラー処理
 func statusCode(err error) int {
-	return http.StatusUnauthorized
+	switch GetType(err) {
+	case ConnectionFailed:
+		return http.StatusInternalServerError // 500
+	case Unauthorized:
+		return http.StatusUnauthorized // 401
+	default:
+		return http.StatusBadRequest // 400
+	}
 }
