@@ -1,6 +1,6 @@
 # poker-api
 
-3/14<br>
+### 3/14<br>
 GitHubとSlackの連携テスト<br>
 
 それぞれのディレクトリの説明<br>
