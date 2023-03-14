@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"reflect"
@@ -66,7 +67,7 @@ func makeIntSlice(cards string) []int {
 		// 正常系
 	} else {
 		// 配布されたコードが5枚でなければ処理を止める
-		panic("配布されたカードの数が5枚ではありません")
+
 	}
 
 	var ab = []int{}
@@ -89,8 +90,9 @@ func makeStringSlice(cards string) []string {
 	if len(p) == 5 {
 		// 正常系
 	} else {
-		// 配布されたコードが5枚でなければ処理を止める
-		panic("配布されたカードの数が5枚ではありません")
+		// 配布されたコードが5枚でなければ処理を止めて、400エラーを出す
+		err := Unauthorized.New("入力値が異なります")
+		fmt.Println(statusCode(err))
 	}
 
 	var u []string = suitValidation(p)
@@ -207,4 +209,9 @@ func suitValidation(y []string) []string {
 		}
 	}
 	return y
+}
+
+// エラー処理
+func statusCode(err error) int {
+	return http.StatusUnauthorized
 }
