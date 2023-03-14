@@ -1,4 +1,4 @@
-package errProcess
+package errTest
 
 import (
 	"github.com/pkg/errors"
