@@ -1,5 +1,8 @@
-// Personという名前がついた構造体を宣言してください。中身はfirstName（string型）、lastName（int型）、age（int型）としてください。
-// その後、この構造体を使って"Wataru Satou 15歳です"と出力してください。
+/*
+Q18
+Personという名前がついた構造体を宣言してください。中身はfirstName（string型）、lastName（int型）、age（int型）としてください。
+その後、この構造体を使って"Wataru Satou 15歳です"と出力してください。
+*/
 package main
 
 import "fmt"

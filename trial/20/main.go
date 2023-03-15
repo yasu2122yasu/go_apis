@@ -1,7 +1,7 @@
 package main
 
 import (
-	"module_trial/lib"
+	"20/lib"
 )
 
 func main() {
