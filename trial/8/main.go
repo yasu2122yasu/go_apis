@@ -1,3 +1,6 @@
+/*
+問題7の処理をmain関数だけではなく、fruitSelect関数に分けて書いてください（main関数は用意してあります）
+*/
 package main
 
 import "fmt"
